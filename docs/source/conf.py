@@ -20,11 +20,12 @@ sys.path.insert(0, os.path.abspath('../../'))
 # -- Project information -----------------------------------------------------
 
 project = 'ldcpy'
-copyright = '2020, Alex Pinard'
-author = 'Alex Pinard'
+copyright = u'2020, University Corporation for Atmospheric Research'
+author = u'Alex Pinard, Allison Baker, Dorit Hammerling'
+
 
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = '0.6'
 
 
 # -- General configuration ---------------------------------------------------
@@ -32,8 +33,22 @@ release = '0.1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['nbsphinx', 'sphinx.ext.autodoc']
-autodoc_mock_imports = ['cartopy', 'tlz', 'cmocean', 'xarray', 'xrft', 'scipy']
+nbsphinx_execute = 'never'
+extensions = ['nbsphinx', 'sphinx.ext.autodoc', 'sphinx.ext.napoleon']
+autodoc_mock_imports = [
+    'cartopy',
+    'tlz',
+    'cmocean',
+    'xarray',
+    'xrft',
+    'scipy',
+    'opencv-python',
+    'scikit-image',
+    'scikit-build',
+    'skbuild',
+    'opencv',
+]
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 

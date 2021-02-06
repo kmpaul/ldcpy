@@ -12,10 +12,14 @@ times = pd.date_range('2000-01-01', periods=10)
 lats = [0, 1, 2, 3]
 lons = [0, 1, 2, 3, 4]
 test_data = xr.DataArray(
-    np.arange(-100, 100).reshape(4, 5, 10), coords=[lats, lons, times], dims=['lat', 'lon', 'time']
+    np.arange(-100, 100).reshape(4, 5, 10),
+    coords=[lats, lons, times],
+    dims=['lat', 'lon', 'time'],
 )
 test_data_2 = xr.DataArray(
-    np.arange(-99, 101).reshape(4, 5, 10), coords=[lats, lons, times], dims=['lat', 'lon', 'time']
+    np.arange(-99, 101).reshape(4, 5, 10),
+    coords=[lats, lons, times],
+    dims=['lat', 'lon', 'time'],
 )
 test_overall_metrics = ldcpy.DatasetMetrics(test_data, ['time', 'lat', 'lon'])
 test_spatial_metrics = ldcpy.DatasetMetrics(test_data, ['time'])
@@ -34,7 +38,6 @@ class TestErrorMetrics(TestCase):
             }
         ]
 
-    @pytest.mark.nonsequential
     def test_creation_01(self):
         DiffMetrics(
             xr.DataArray(self._samples[0]['observed']),
@@ -42,7 +45,6 @@ class TestErrorMetrics(TestCase):
             [],
         )
 
-    @pytest.mark.nonsequential
     def test_error_01(self):
         em = DatasetMetrics(
             xr.DataArray(self._samples[0]['observed']) - xr.DataArray(self._samples[0]['measured']),
@@ -51,7 +53,6 @@ class TestErrorMetrics(TestCase):
 
         self.assertTrue(all(self._samples[0]['expected_error'] == em.sum))
 
-    @pytest.mark.nonsequential
     def test_mean_error_01(self):
         em = DatasetMetrics(
             xr.DataArray(self._samples[0]['observed']) - xr.DataArray(self._samples[0]['measured']),
@@ -59,7 +60,6 @@ class TestErrorMetrics(TestCase):
         )
         self.assertTrue(em.mean.all() == 0.0)
 
-    @pytest.mark.nonsequential
     def test_mean_error_02(self):
         em = DatasetMetrics(
             xr.DataArray(self._samples[0]['observed'] - xr.DataArray(self._samples[0]['measured'])),
@@ -72,7 +72,6 @@ class TestErrorMetrics(TestCase):
 
         self.assertTrue(em.mean.all() == 0.0)
 
-    @pytest.mark.nonsequential
     def test_TS_02(self):
         import xarray as xr
         import zfpy
@@ -83,93 +82,65 @@ class TestErrorMetrics(TestCase):
 
         print(type(TS))
 
-    @pytest.mark.nonsequential
     def test_mean(self):
         self.assertTrue(test_overall_metrics.mean == -0.5)
 
-    @pytest.mark.nonsequential
     def test_mean_abs(self):
         self.assertTrue(test_overall_metrics.mean_abs == 50)
 
-    @pytest.mark.nonsequential
     def test_mean_squared(self):
         self.assertTrue(np.isclose(test_overall_metrics.mean_squared, 0.25, rtol=1e-09))
 
-    @pytest.mark.nonsequential
     def test_min_abs(self):
         self.assertTrue(test_overall_metrics.min_abs == 0)
 
-    @pytest.mark.nonsequential
     def test_max_abs(self):
         self.assertTrue(test_overall_metrics.max_abs == 100)
 
-    @pytest.mark.nonsequential
     def test_min_val(self):
         self.assertTrue(test_overall_metrics.min_val == -100)
 
-    @pytest.mark.nonsequential
     def test_max_val(self):
         self.assertTrue(test_overall_metrics.max_val == 99)
 
-    @pytest.mark.nonsequential
     def test_ns_con_var(self):
         self.assertTrue(test_overall_metrics.ns_con_var == 2500)  # is this right?
 
-    @pytest.mark.nonsequential
     def test_ew_con_var(self):
         self.assertTrue(test_overall_metrics.ew_con_var == 400)  # is this right?
 
-    @pytest.mark.nonsequential
     def test_odds_positive(self):
         self.assertTrue(np.isclose(test_overall_metrics.odds_positive, 0.98019802, rtol=1e-09))
 
-    @pytest.mark.nonsequential
     def test_prob_negative(self):
         self.assertTrue(test_overall_metrics.prob_negative == 0.5)
 
-    @pytest.mark.nonsequential
     def test_prob_positive(self):
         self.assertTrue(test_overall_metrics.prob_positive == 0.495)
 
-    @pytest.mark.nonsequential
     def test_dyn_range(self):
         self.assertTrue(test_overall_metrics.dyn_range == 199)
 
-    @pytest.mark.nonsequential
-    def test_corr_lag1(self):
-        self.assertTrue(np.isnan(test_overall_metrics.corr_lag1).all())  # is this right?
-
-    @pytest.mark.nonsequential
-    def test_lag1(self):
-        self.assertTrue(test_overall_metrics.lag1.all() == 0)  # is this right?
-
-    @pytest.mark.nonsequential
     def test_median(self):
         self.assertTrue(test_overall_metrics.get_metric('quantile', 0.5) == -0.5)
 
-    @pytest.mark.nonsequential
     def test_rms(self):
         self.assertTrue(np.isclose(test_overall_metrics.get_metric('rms'), 57.73647028, rtol=1e-09))
 
-    @pytest.mark.nonsequential
     def test_std(self):
-        self.assertTrue(np.isclose(test_overall_metrics.get_metric('std'), 57.73430523, rtol=1e-09))
+        self.assertTrue(np.isclose(test_overall_metrics.get_metric('std'), 57.87918451, rtol=1e-09))
 
-    @pytest.mark.nonsequential
     def test_sum(self):
         self.assertTrue(test_overall_metrics.get_metric('sum') == -100)
 
-    @pytest.mark.nonsequential
     def test_variance(self):
         self.assertTrue(test_overall_metrics.get_metric('variance') == 3333.25)
 
-    @pytest.mark.nonsequential
     def test_zscore(self):
         self.assertTrue(
-            np.isclose(test_overall_metrics.get_metric('zscore'), -0.02738647, rtol=1e-09)
+            np.isclose(test_overall_metrics.get_metric('zscore'), -0.02731792, rtol=1e-09)
         )
 
-    @pytest.mark.nonsequential
     def test_mean_spatial(self):
         self.assertTrue(
             (
@@ -185,7 +156,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_mean_abs_spatial(self):
         self.assertTrue(
             (
@@ -201,7 +171,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_mean_squared_spatial(self):
         self.assertTrue(
             np.isclose(
@@ -218,7 +187,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_min_abs_spatial(self):
         self.assertTrue(
             (
@@ -234,7 +202,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_max_abs_spatial(self):
         self.assertTrue(
             (
@@ -250,7 +217,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_min_val_spatial(self):
         self.assertTrue(
             (
@@ -266,7 +232,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_max_val_spatial(self):
         self.assertTrue(
             (
@@ -282,7 +247,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_ns_con_var_spatial(self):
         self.assertTrue(
             (
@@ -297,7 +261,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_odds_positive_spatial(self):
         self.assertTrue(
             np.isclose(
@@ -314,7 +277,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_prob_positive_spatial(self):
         self.assertTrue(
             np.isclose(
@@ -331,7 +293,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_prob_negative_spatial(self):
         self.assertTrue(
             np.isclose(
@@ -348,7 +309,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_median_spatial(self):
         self.assertTrue(
             (
@@ -364,7 +324,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_rms_spatial(self):
         self.assertTrue(
             np.isclose(
@@ -381,24 +340,22 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_std_spatial(self):
         self.assertTrue(
             np.isclose(
                 test_spatial_metrics.get_metric('std'),
                 np.array(
                     [
-                        [2.87228132, 2.87228132, 2.87228132, 2.87228132, 2.87228132],
-                        [2.87228132, 2.87228132, 2.87228132, 2.87228132, 2.87228132],
-                        [2.87228132, 2.87228132, 2.87228132, 2.87228132, 2.87228132],
-                        [2.87228132, 2.87228132, 2.87228132, 2.87228132, 2.87228132],
+                        [3.02765035, 3.02765035, 3.02765035, 3.02765035, 3.02765035],
+                        [3.02765035, 3.02765035, 3.02765035, 3.02765035, 3.02765035],
+                        [3.02765035, 3.02765035, 3.02765035, 3.02765035, 3.02765035],
+                        [3.02765035, 3.02765035, 3.02765035, 3.02765035, 3.02765035],
                     ]
                 ),
                 rtol=1e-09,
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_sum_spatial(self):
         self.assertTrue(
             (
@@ -414,7 +371,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_variance_spatial(self):
         self.assertTrue(
             (
@@ -430,28 +386,22 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_zscore_spatial(self):
         self.assertTrue(
             np.isclose(
                 test_spatial_metrics.get_metric('zscore'),
                 np.array(
                     [
-                        [-105.14203957, -94.13240192, -83.12276427, -72.11312662, -61.10348896],
-                        [-50.09385131, -39.08421366, -28.07457601, -17.06493836, -6.05530071],
-                        [4.95433694, 15.96397459, 26.97361225, 37.9832499, 48.99288755],
-                        [60.0025252, 71.01216285, 82.0218005, 93.03143815, 104.0410758],
+                        [-99.74649686, -89.30183751, -78.85717815, -68.41251879, -57.96785943],
+                        [-47.52320008, -37.07854072, -26.63388136, -16.189222, -5.74456265],
+                        [4.70009671, 15.14475607, 25.58941543, 36.03407478, 46.47873414],
+                        [56.9233935, 67.36805285, 77.81271221, 88.25737157, 98.70203093],
                     ]
                 ),
                 rtol=1e-09,
             ).all()
         )
 
-    @pytest.mark.nonsequential
-    def test_corr_lag1_spatial(self):
-        self.assertTrue(np.isnan(test_spatial_metrics.get_metric('corr_lag1')).all())
-
-    @pytest.mark.nonsequential
     def test_ew_con_var_spatial(self):
         self.assertTrue(
             (
@@ -467,47 +417,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
-    def test_lag1_spatial(self):
-        self.assertTrue(
-            (
-                test_spatial_metrics.get_metric('lag1')
-                == np.array(
-                    [
-                        [
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                        ],
-                        [
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                        ],
-                        [
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                        ],
-                        [
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                        ],
-                    ]
-                )
-            ).all()
-        )
-
-    @pytest.mark.nonsequential
     def test_mean_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -517,7 +426,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_mean_abs_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -527,7 +435,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_mean_squared_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -537,7 +444,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_max_abs_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -547,7 +453,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_max_val_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -557,7 +462,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_min_abs_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -567,7 +471,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_min_val_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -577,19 +480,28 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_ns_con_var_time_series(self):
         self.assertTrue(
             np.isclose(
                 test_time_series_metrics.get_metric('ns_con_var'),
                 np.array(
-                    [2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0, 2500.0]
+                    [
+                        2500.0,
+                        2500.0,
+                        2500.0,
+                        2500.0,
+                        2500.0,
+                        2500.0,
+                        2500.0,
+                        2500.0,
+                        2500.0,
+                        2500.0,
+                    ]
                 ),
                 rtol=1e-09,
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_odds_positive_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -599,7 +511,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_prob_negative_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -609,7 +520,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_prob_positive_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -619,7 +529,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_median_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -629,7 +538,6 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_rms_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -652,30 +560,28 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_std_time_series(self):
         self.assertTrue(
             np.isclose(
                 test_time_series_metrics.get_metric('std'),
                 np.array(
                     [
-                        57.66281297,
-                        57.66281297,
-                        57.66281297,
-                        57.66281297,
-                        57.66281297,
-                        57.66281297,
-                        57.66281297,
-                        57.66281297,
-                        57.66281297,
-                        57.66281297,
+                        59.16079783,
+                        59.16079783,
+                        59.16079783,
+                        59.16079783,
+                        59.16079783,
+                        59.16079783,
+                        59.16079783,
+                        59.16079783,
+                        59.16079783,
+                        59.16079783,
                     ]
                 ),
                 rtol=1e-09,
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_sum_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -685,46 +591,50 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_variance_time_series(self):
         self.assertTrue(
             np.isclose(
                 test_time_series_metrics.get_metric('variance'),
                 np.array(
-                    [3325.0, 3325.0, 3325.0, 3325.0, 3325.0, 3325.0, 3325.0, 3325.0, 3325.0, 3325.0]
-                ),
-                rtol=1e-09,
-            ).all()
-        )
-
-    @pytest.mark.nonsequential
-    def test_zscore_time_series(self):
-        self.assertTrue(
-            np.isclose(
-                test_time_series_metrics.get_metric('zscore'),
-                np.array(
                     [
-                        -0.27420425,
-                        -0.2193634,
-                        -0.16452255,
-                        -0.1096817,
-                        -0.05484085,
-                        0.0,
-                        0.05484085,
-                        0.1096817,
-                        0.16452255,
-                        0.2193634,
+                        3325.0,
+                        3325.0,
+                        3325.0,
+                        3325.0,
+                        3325.0,
+                        3325.0,
+                        3325.0,
+                        3325.0,
+                        3325.0,
+                        3325.0,
                     ]
                 ),
                 rtol=1e-09,
             ).all()
         )
 
-    @pytest.mark.nonsequential
-    def test_corr_lag1_time_series(self):
-        self.assertTrue(np.isnan(test_time_series_metrics.corr_lag1).all())
+    def test_zscore_time_series(self):
+        self.assertTrue(
+            np.isclose(
+                test_time_series_metrics.get_metric('zscore'),
+                np.array(
+                    [
+                        -0.26726124,
+                        -0.21380899,
+                        -0.16035675,
+                        -0.1069045,
+                        -0.05345225,
+                        0.0,
+                        0.05345225,
+                        0.1069045,
+                        0.16035675,
+                        0.21380899,
+                    ]
+                ),
+                rtol=1e-09,
+            ).all()
+        )
 
-    @pytest.mark.nonsequential
     def test_ew_con_var_time_series(self):
         self.assertTrue(
             np.isclose(
@@ -734,85 +644,47 @@ class TestErrorMetrics(TestCase):
             ).all()
         )
 
-    @pytest.mark.nonsequential
-    def test_lag1_time_series(self):
-        self.assertTrue(
-            np.isclose(
-                test_time_series_metrics.get_metric('lag1'),
-                np.array(
-                    [
-                        [
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                        ],
-                        [
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                        ],
-                        [
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                        ],
-                        [
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-                        ],
-                    ]
-                ),
-                rtol=1e-09,
-            ).all()
-        )
-
-    @pytest.mark.nonsequential
     def test_diff_pcc(self):
         self.assertTrue(
             np.isclose(
                 test_diff_metrics.get_diff_metric('pearson_correlation_coefficient'),
+                np.array(1),
+                rtol=1e-09,
+            ).all()
+        )
+
+    def test_diff_ksp(self):
+        self.assertTrue(
+            np.isclose(
+                test_diff_metrics.get_diff_metric('ks_p_value'),
                 np.array(1.0),
                 rtol=1e-09,
             ).all()
         )
 
-    @pytest.mark.nonsequential
-    def test_diff_ksp(self):
-        self.assertTrue(
-            np.isclose(
-                test_diff_metrics.get_diff_metric('ks_p_value'), np.array(0.005), rtol=1e-09
-            ).all()
-        )
-
-    @pytest.mark.nonsequential
     def test_diff_covariance(self):
         self.assertTrue(
             np.isclose(
-                test_diff_metrics.get_diff_metric('covariance'), np.array(3333.25), rtol=1e-09
+                test_diff_metrics.get_diff_metric('covariance'),
+                np.array(3333.25),
+                rtol=1e-09,
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_diff_normalized_max_pointwise_error(self):
         self.assertTrue(
             np.isclose(
-                test_diff_metrics.get_diff_metric('n_emax'), np.array(0.00502513), rtol=1e-09
+                test_diff_metrics.get_diff_metric('n_emax'),
+                np.array(0.00502513),
+                rtol=1e-09,
             ).all()
         )
 
-    @pytest.mark.nonsequential
     def test_diff_normalized_root_mean_squared(self):
         self.assertTrue(
             np.isclose(
-                test_diff_metrics.get_diff_metric('n_rms'), np.array(0.00502513), rtol=1e-09
+                test_diff_metrics.get_diff_metric('n_rms'),
+                np.array(0.00502513),
+                rtol=1e-09,
             ).all()
         )

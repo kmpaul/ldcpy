@@ -2,9 +2,6 @@
     :target: https://github.com/NCAR/ldcpy/actions
     :alt: GitHub Workflow CI Status
 
-.. image:: https://img.shields.io/circleci/project/github/NCAR/ldcpy/master.svg?style=for-the-badge&logo=circleci
-    :target: https://circleci.com/gh/NCAR/ldcpy/tree/master
-
 .. image:: https://img.shields.io/github/workflow/status/NCAR/ldcpy/code-style?label=Code%20Style&style=for-the-badge
     :target: https://github.com/NCAR/ldcpy/actions
     :alt: GitHub Workflow Code Style Status
@@ -12,8 +9,8 @@
 .. image:: https://img.shields.io/codecov/c/github/NCAR/ldcpy.svg?style=for-the-badge
     :target: https://codecov.io/gh/NCAR/ldcpy
 
-.. image:: https://img.shields.io/readthedocs/ldcpy/latest.svg?style=for-the-badge
-    :target: https://ldcpy.readthedocs.io/en/latest/?badge=latest
+.. image:: https://img.shields.io/readthedocs/ldcpy/dev.svg?style=for-the-badge
+    :target: https://ldcpy.readthedocs.io/en/dev/?badge=dev
     :alt: Documentation Status
 
 .. image:: https://img.shields.io/pypi/v/ldcpy.svg?style=for-the-badge
@@ -24,12 +21,22 @@
     :target: https://anaconda.org/conda-forge/ldcpy
     :alt: Conda Version
 
-Lossy Data Compression for Python
+.. image:: https://zenodo.org/badge/215409079.svg?style=for-the-badge
+   :target: https://zenodo.org/badge/latestdoi/215409079
+
+Large Data Comparison for Python
 =================================
 
-ldcpy is a utility for gathering and plotting metrics from NetCDF files using the Pangeo stack.
+ldcpy is a utility for gathering and plotting metrics from NetCDF or Zarr files using the Pangeo stack.
+It also contains a number of statistical and visual tools for gathering metrics and comparing Earth System Model data files.
+
+
+:AUTHORS: Alex Pinard, Allison Baker, Dorit Hammerling
+:COPYRIGHT: 2020 University Corporation for Atmospheric Research
+:LICENSE: Apache 2.0
 
 Documentation and usage examples are available `here <http://ldcpy.readthedocs.io>`_.
+
 
 Installation using Conda (recommended)
 ______________________________________
@@ -46,7 +53,7 @@ Now install ldcpy:
 
 .. code-block:: bash
 
-    conda install ldcpy
+    conda install -c conda-forge ldcpy
 
 Alternative Installation
 ________________________
